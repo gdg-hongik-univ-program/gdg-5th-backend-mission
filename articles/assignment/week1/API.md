@@ -27,8 +27,8 @@ POST /products
 {
     "cart" : [ 
     {
-        "name" : "apple",
-        "cnt" : 20
+        "name" : "apple", 
+        "cnt" : 20 //물건 구매 갯수
     },
     {
         "name" : "water",
@@ -42,17 +42,17 @@ POST /products
 ```Json
 // OUTPUT
 {
-    "total": 20000 ,
+    "total": 40000 ,
     "cart" : 
         {
             "name" : "apple",
             "cnt" : 20,
-            "price" : 10000
+            "price" : 1000
         },
         {
             "name" : "water",
             "cnt" : 20,
-            "price" : 10000
+            "price" : 1000
 
         }
 }
@@ -63,21 +63,20 @@ POST /products
 
 ### 재고등록
 
-POST /products/1
+POST /products
 ```Json
 //Input 
 {
     "name" : "apple",
     "stock" : 100,
     "price" : 1000
-
 }
 ```
 
 ```Json
-//Oupt
+//Error
 {
-
+    "message" : "이미 존재하는 물품입니다"
 
 }
 ```
@@ -102,6 +101,7 @@ PATCH /products/1
 ```
 
 ### 물품삭제
+DELETE /products
 ```Json
 //Input
 {

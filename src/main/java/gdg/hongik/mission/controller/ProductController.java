@@ -1,19 +1,31 @@
 package gdg.hongik.mission.controller;
 
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+
+import gdg.hongik.mission.dto.Product;
+import gdg.hongik.mission.dto.request.ProductCreateRequest;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
 
 @RestController
 @RequestMapping("products")
 public class ProductController {
 
     @GetMapping("/{name}")
-    public String getProduct(@PathVariable String name){
-        name = "apple";
-        return name;
+    public ResponseEntity<Product> getProduct(@PathVariable String name){
+        Product product = new Product();
+
+        return ResponseEntity.ok(product);
+    }
+
+    @PostMapping
+    public ResponseEntity<Void> createProduct(@RequestBody ProductCreateRequest request){
+        ProductCreateRequest result = new ProductCreateRequest(
+                request.
+        )
+        return ResponseEntity.created(URI.create("products")).build();
     }
 
 

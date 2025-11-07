@@ -1,4 +1,5 @@
-package gdg.hongik.mission.dto;
+package gdg.hongik.mission.dto.request;
 
-public class ProductCreate {
+public class ProductCreateRequest {
+
 }

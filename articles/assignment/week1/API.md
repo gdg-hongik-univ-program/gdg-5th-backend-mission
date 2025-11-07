@@ -20,7 +20,7 @@ GET /products?name=string
 ```
 
 ### 재고 구매
-POST /products
+POST /order
 
 ```json
 //Input
@@ -42,8 +42,8 @@ POST /products
 ```Json
 // OUTPUT
 {
-    "total": 40000 ,
-    "cart" : 
+    "totalPrice": 40000 ,
+    "cart" : [
         {
             "name" : "apple",
             "cnt" : 20,
@@ -54,7 +54,7 @@ POST /products
             "cnt" : 20,
             "price" : 1000
 
-        }
+        }]
 }
     
 ```
@@ -105,7 +105,10 @@ DELETE /products
 ```Json
 //Input
 {
-    "name" : ["apple","water"]
+    "items" : [
+    {"name" : "apple"},
+    {"name" : "water"}
+    ]
 }
 ```
 

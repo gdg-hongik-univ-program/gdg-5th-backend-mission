@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ public class ShopController {
     //재고 검색
     @GetMapping("/products/{name}")
     //product타입을 반환한다
-    public ResponseEntity<Product> searchProduct(@RequestParam String productName) throws Exception{
+    public ResponseEntity<Product> searchProduct(@PathVariable String productName) throws Exception{
         Product product = shopService.searchProduct(productName); //서비스로 넘긴다 -> 이것도 과제인가?
         return ResponseEntity.ok(null); //200 요청 성공
     }
@@ -37,24 +38,24 @@ public class ShopController {
     //재고 등록 - 에러 반환 해야됨!!
     @PostMapping("/admin/products")
     public ResponseEntity<Void> createProduct(@RequestBody ProductCreateRequest request) throws Exception{
-        if(true){
-            Product product = new Product(request.getName(), request.getPrice(), request.getStock()); //재고 객체 생성
+        try {
+            Product createdProduct = shopService.createProduct(request);
             return ResponseEntity.created(URI.create("/product/")).build(); //201 리소스 생성 성공
         }
-        else{
-            return ResponseEntity.noContent().build();
+
+        catch (Exception e) { //에러처리
+            throw new ResponseStatusException( //HTTP 응답 상태 코드, 오류 메시지 반환 - ResponseEntity와 다름(예외/오류 응답)
+                    HttpStatus.CONFLICT, "요청하신 상품은 이미 존재하여 등록할 수 없습니다." //409 상태 충돌
+            );
         }
-
-
-
     }
 
     //재고 추가
     @PatchMapping("/admin/products/{name}/stock") // PATCH /admin/products/{name}/stock?quantity=int
-    public ResponseEntity<Product> updateStock(@PathVariable String productName, @RequestParam Integer quantity) {
+    public ResponseEntity<Product> updateProduct(@PathVariable String productName, @RequestParam Integer quantity) {
         //재고 수정, 정보 반환
-        shopService.updateProduct(productName, quantity);
-        return ResponseEntity.noContent().build(); //이거 아님
+        Product updateProduct = shopService.updateProduct(productName, quantity);
+        return ResponseEntity.ok(updateProduct);
     }
 
 

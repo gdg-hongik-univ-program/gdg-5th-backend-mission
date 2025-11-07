@@ -29,8 +29,9 @@ public class ShopService {
         return newOrder; // 완성된 Order 객체 반환
     }
 
-    public void updateProduct(String productName, Integer quantity) {
-        return;
+    public Product updateProduct(String productName, Integer quantity) {
+        Product product = new Product();
+        return product;
     }
 
     public void deleteProduct(List<String> productName) {

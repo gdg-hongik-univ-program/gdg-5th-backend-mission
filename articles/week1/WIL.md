@@ -12,9 +12,22 @@
 
 ## 계층구조의 필요성
 
+
+## ResponseEntity
+### HttpEntity클래스
+Spring Framework에서 제공하는 클래스중 HttpEntity라는 클래스가 존재한다  
+이것은 요청(Request) 또는 응답(Response)에 해당하는 HttpHeader와 HttpBody를 포함하는 클래스이다.  
+HttpEntity 클래스를 상속받아 구현한 클래스가 RequestEntity, RequestEntity다
+
+### ResponseEntity
+HttpRequest에 대한 응답 데이터를 포함하는 클래스다
+HttpStatus, HttpHeaders, HttpBody를 포함한다.  
+
 ## Bean이란?
 
 ## 의존성 loc와 DI
+
+
 
 ### Autowired 그리고 NoArgsConstructor
 다음 코드에 문제점은 ?
@@ -38,11 +51,15 @@ JPA와 같은 프레임 워크는 내부적으로 객체를 생성하기 위해 
 이 과정에서 JPA는 엔티티의 기본 생성자를 호출해 객체를 인스턴스화 하고,  
 이후 데이터베이스에서 조회한 값을 엔티티 필드에 매핑한다.  
 기본생성자가 없으면 JPA는 객체를 생성 할 수 없어서 오류가 발생한다.  
+그래서 자동으로 생성자를 만들어 주는 **NoArgsConstructor**를 사용한다
 
-정리
-JPA가 DB에서 데이터를 조회 후 객체 생성할때 리플렉션 사용  
-리플랙션은 기본 생성자를 호출해 객체를 인스턴스화 함
-그러므로 기본 생성자가 없으면 객체를 생성 못하므로 오류발생
+>정리
+>JPA가 DB에서 데이터를 조회 후 객체 생성할때 리플렉션 사용    
+>리플랙션은 기본 생성자를 호출해 객체를 인스턴스화 함  
+>그러므로 기본 생성자가 없으면 객체를 생성 못하므로 오류발생  
+>NoArgsConstructor을 사용
+
+
 
 ```Java
 public class ProductService {
@@ -54,16 +71,13 @@ public class ProductService {
 
 
 
+## Builder Pattern
+객체에 생성자가 필요하다  
+필드가 많을수록 생성자 패턴이 다양해 질 수 있다
 
+>int add()
+>int add(int x)
+>int add(int y)
+>int add(int x, int y)
 
-
-## ResponseEntity
-### HttpEntity클래스
-Spring Framework에서 제공하는 클래스중 HttpEntity라는 클래스가 존재한다  
-이것은 요청(Request) 또는 응답(Response)에 해당하는 HttpHeader와 HttpBody를 포함하는 클래스이다.  
-HttpEntity 클래스를 상속받아 구현한 클래스가 RequestEntity, RequestEntity다
-
-### ResponseEntity
-HttpRequest에 대한 응답 데이터를 포함하는 클래스다
-HttpStatus, HttpHeaders, HttpBody를 포함한다.  
-
+이렇게 다양한 생성자의 패턴을 자동으로 만들어 주는 기능도 있다

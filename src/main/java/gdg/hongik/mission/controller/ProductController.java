@@ -4,7 +4,6 @@ package gdg.hongik.mission.controller;
 
 import gdg.hongik.mission.dto.Product;
 import gdg.hongik.mission.dto.request.ProductCreateRequest;
-import gdg.hongik.mission.repository.ProductRespository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -15,13 +14,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.HashMap;
 
 @RestController
 @RequestMapping("products")
 @Tag(name ="Product-Controller" ,description = "Product API")
 public class ProductController {
 
-    private ProductRespository productRespository;
+
+    HashMap<Long,Product> repository = new HashMap<>();
+    private Long idSequence = 0L;
 
     @GetMapping("/{name}")
     @Operation(summary = "재고 검색", description = "재고 정보를 검색합니다. 사용자 관리자 모두 사용 가능")
@@ -73,7 +75,18 @@ public class ProductController {
 
     public ResponseEntity<Void> createProduct(@RequestBody ProductCreateRequest request){
 
-        //Product existProduct = ProdcutRepository.findByName(request.getName());
+        String existed = String.valueOf(repository.get(request.getName())); //Null이면 Null값 반환
+        if( existed.equals(request.getName())){
+            throw new RuntimeException(); //이게 맞나
+        }
+
+        Product product = Product.builder()
+                .name(request.getName())
+                .price(request.getPrice())
+                .stock(request.getStock())
+                .build(); //builder 패턴
+
+        repository.put(idSequence++,product);
 
         return ResponseEntity.created(URI.create("products")).build();
     }

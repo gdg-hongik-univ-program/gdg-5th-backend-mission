@@ -1,0 +1,1 @@
+![Swagger_UI.png](../../../Swagger_UI.png)

@@ -4,6 +4,7 @@ package gdg.hongik.mission.controller;
 
 import gdg.hongik.mission.dto.Product;
 import gdg.hongik.mission.dto.request.ProductCreateRequest;
+import gdg.hongik.mission.repository.ProductRespository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -19,6 +20,8 @@ import java.net.URI;
 @RequestMapping("products")
 @Tag(name ="Product-Controller" ,description = "Product API")
 public class ProductController {
+
+    private ProductRespository productRespository;
 
     @GetMapping("/{name}")
     @Operation(summary = "재고 검색", description = "재고 정보를 검색합니다. 사용자 관리자 모두 사용 가능")
@@ -69,6 +72,8 @@ public class ProductController {
     })
 
     public ResponseEntity<Void> createProduct(@RequestBody ProductCreateRequest request){
+
+        //Product existProduct = ProdcutRepository.findByName(request.getName());
 
         return ResponseEntity.created(URI.create("products")).build();
     }

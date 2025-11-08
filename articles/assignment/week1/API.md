@@ -81,7 +81,7 @@ POST /products
 }
 ```
 
-### 재고추가
+### 재고수정
 PATCH /products/1
 ```Json
 //Input
@@ -115,7 +115,7 @@ DELETE /products
 ```Json
 //Out
 {
-    "rest" : [{
+    "items" : [{
         "name": "milk",
         "stock" : 20
     },

@@ -2,14 +2,14 @@
 ### 재고 검색
 GET /products?name=string
 
-[//]: # (INPUT)
+INPUT
 ```json
 {
     "name": "apple"
 }
 ```
 
-[//]: # (OUTPUT) 
+OUTPUT 
 ```JSON
 {
     "id": 1,
@@ -22,7 +22,7 @@ GET /products?name=string
 ### 재고 구매 : 주문 생성
 POST /orders
 
-[//] #: (INPUT)
+INPUT
 ```JSON
 [
   {
@@ -36,7 +36,7 @@ POST /orders
 ]
 ```
 
-[//]: # (OUTPUT)
+OUTPUT
 ```JSON
 {
     "totalPrice": 7000,
@@ -59,7 +59,7 @@ POST /orders
 ### 재고 등록
 POST /admin/products
 
-[//]: # (INPUT)
+INPUT
 ```JSON
 {
     "name": "apple",
@@ -68,16 +68,7 @@ POST /admin/products
 }
 ```
 
-[//]: # (OUTPUT)
-```JSON
-{
-    "name": "apple",
-    "price": 3000,
-    "stock": 300
-}
-```
-
-// ERROR OUTPUT
+ERROR OUTPUT
 ```JSON
 {
     "status": 409,
@@ -87,15 +78,17 @@ POST /admin/products
 
 ### 재고 추가
 PATCH /admin/products/{name}/stock
+//이게 맞나
 
-[//]: # (INPUT)
+INPUT
 ```JSON
 {
+    "name" : "apple",
     "quantity" : 300
 }
 ```
 
-[//]: # (OUTPUT)
+OUTPUT
 ```JSON
 {
     "name" : "apple",
@@ -107,14 +100,14 @@ PATCH /admin/products/{name}/stock
 ### 물품 삭제
 DELETE /admin/products?name=string[]
 
-[//]: # (INPUT)
+INPUT
 ```JSON
 {
    "name" : "apple"
 }
 ```
 
-[//]: # (OUTPUT)
+    OUTPUT
 ```JSON
 [
     {

@@ -1,1 +1,5 @@
-컨트롤러 계층을 작성했다. @RequestParam, @PathVariable, @MoreAttribute등 에 대해서 공부하자
+컨트롤러 계층을 작성하며특정 리소스를 식별하거나 필터링하는데 사용되는 어노테이션 @RequestParam, @PathVariable에 대해서 공부할 수 있었다.
+
+@PathVariable은 URI 경로 자체에 포함된 값을 컨트롤러 메서드 파라미터로 바인딩한다. URI 경로의 일부를 변수로 사용 가능한 것이다. 예를 들어 GET/user/123의 요청이 있을 경우 @GetMapping("/user/{id}")에서 @PathVariable String id 어노테이션을 사용하면 URI를 매핑해 id에 해당하는 부분을 추출한다.
+
+@RequestParam은 쿼리 스트링에서 값을 추출한다. 리소스 자체를 식별하기 보단 추가적인 옵션이나 조건을 제공할 때 사용한다. 예를 들어 쿼리 스트링 뒤에 따라오는 검색 조건을 매서드 매개변수에 연결해 해당 파라미터 값을 변수에 할당한다. @PathVariable과 달리 개별적인 조건에 접근할 수 있다.

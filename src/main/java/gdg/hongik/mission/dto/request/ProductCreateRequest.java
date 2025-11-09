@@ -4,6 +4,7 @@ package gdg.hongik.mission.dto.request;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.Builder;
 import lombok.Generated;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,6 +19,7 @@ public class ProductCreateRequest {
     private Long stock;
 
     private Long price;
+
 
     public ProductCreateRequest( String name,Long stock, Long price) {
         this.name = name;

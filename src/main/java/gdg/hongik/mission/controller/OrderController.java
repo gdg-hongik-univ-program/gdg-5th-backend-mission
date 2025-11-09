@@ -50,6 +50,7 @@ public class OrderController {
     }))
     public ResponseEntity<OrderCreateResponse> createOrder(@RequestBody OrderCreateRequest request){
 
+        //product의 재고랑 연결하기
         OrderCreateResponse result = new OrderCreateResponse(
                 request.getName(),
                 request.getCnt()

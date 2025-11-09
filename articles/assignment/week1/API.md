@@ -105,10 +105,7 @@ DELETE /products
 ```Json
 //Input
 {
-    "items" : [
-    {"name" : "apple"},
-    {"name" : "water"}
-    ]
+    "name" : ["apple","water"]
 }
 ```
 

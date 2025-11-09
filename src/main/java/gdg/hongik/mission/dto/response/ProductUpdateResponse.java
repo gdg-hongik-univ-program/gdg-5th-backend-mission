@@ -1,4 +1,18 @@
 package gdg.hongik.mission.dto.response;
 
-public class ProductCreateResponse {
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+
+
+
+@Getter
+@Builder
+@AllArgsConstructor
+public class ProductUpdateResponse {
+
+
+    private String name;
+    private Long stock;
 }

@@ -38,3 +38,4 @@ out/
 
 ### VS Code ###
 .vscode/
+.gradle/8.14.3/fileHashes/fileHashes.lock

@@ -27,9 +27,6 @@ import java.util.*;
 public class ProductController {
 
 
-    HashMap<Long,Product> repository = new HashMap<>();
-    private Long idSequence = 1L;
-
     @GetMapping("/{name}")
     @Operation(summary = "재고 검색", description = "재고 정보를 검색합니다. 사용자 관리자 모두 사용 가능")
     @ApiResponse(responseCode = "200",content = @Content(mediaType = "application/json",
@@ -45,17 +42,13 @@ public class ProductController {
                             """
             )}))
     public ResponseEntity<?> getProduct(@PathVariable String name){
-
+        //컨트롤러 계층
+        //사용자요청을 처리
         for (HashMap.Entry<Long, Product> entry : repository.entrySet()) {
             Product product = entry.getValue();
             if (name.equals(product.getName())) {
 
-                ProductGetResponse result = ProductGetResponse.builder()
-                        .id(entry.getKey()) // 여기서 id 주입
-                        .name(product.getName())
-                        .price(product.getPrice())
-                        .stock(product.getStock())
-                        .build();
+
 
                 return ResponseEntity.ok(result);
             }

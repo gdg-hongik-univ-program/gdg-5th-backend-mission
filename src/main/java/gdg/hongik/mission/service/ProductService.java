@@ -2,29 +2,150 @@ package gdg.hongik.mission.service;
 
 
 import gdg.hongik.mission.dto.Product;
+import gdg.hongik.mission.dto.request.OrderCreateRequest;
+import gdg.hongik.mission.dto.request.ProductCreateRequest;
+import gdg.hongik.mission.dto.request.ProductUpdateRequest;
+import gdg.hongik.mission.dto.response.OrderCreateResponse;
+import gdg.hongik.mission.dto.response.ProductDeleteResponse;
 import gdg.hongik.mission.dto.response.ProductGetResponse;
+import gdg.hongik.mission.dto.response.ProductUpdateResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
+import java.util.*;
 
+/**
+ * 
+ * 서비스 계층 비즈니스 로직을 담당하는 계층
+ * 
+ */
 @Service
 public class ProductService {
+
 
     HashMap<Long, Product> repository = new HashMap<>();
     private Long idSequence = 1L;
 
-    @Transactional
-    public void getProduct (String productName){
 
-        ProductGetResponse result = ProductGetResponse.builder()
-                .id(entry.getKey()) // 여기서 id 주입
-                .name(product.getName())
-                .price(product.getPrice())
-                .stock(product.getStock())
+
+    @Transactional
+    public ProductGetResponse getProduct (String productName){
+
+        //코드 중복임
+        Map.Entry<Long,Product> find = repository.entrySet().stream()
+                .filter(p -> productName.equals(p.getValue().getName()))
+                .findFirst()
+                .orElse(null);
+
+
+        ProductGetResponse pg = ProductGetResponse.builder()
+                .id(find.getKey())
+                .stock(find.getValue().getStock())
+                .price(find.getValue().getPrice())
+                .name(find.getValue().getName())
                 .build();
+
+        return pg;
     }
 
+
+
+    @Transactional
+    public boolean findByName(String name){
+        
+        //코드 중복임
+        Map.Entry<Long,Product> find = repository.entrySet().stream()
+                .filter(p -> name.equals(p.getValue().getName()))
+                .findFirst()
+                .orElse(null);
+
+
+        if( find == null ) {
+
+            return false;
+
+        }
+
+
+        return true;
+    }
+
+    public void postProduct(ProductCreateRequest request) {
+
+        Product product = Product.builder()
+                .name(request.getName())
+                .price(request.getPrice())
+                .stock(request.getStock())
+                .build(); //builder 패턴
+
+        repository.put(idSequence++,product);
+    }
+
+    public Long findById (Long id) {
+
+        Map.Entry<Long, Product> ex = repository.entrySet().stream()
+                .filter(p -> id.equals(p.getKey()))
+                .findFirst()
+                .orElse(null);
+        if( ex == null){
+            throw new RuntimeException("존재하지 않는 id입니다");
+        }
+
+        return ex.getKey();
+
+    }
+
+    public ProductUpdateResponse updateProduct(
+            Long findId,
+            ProductUpdateRequest request) {
+
+        Product product = repository.get(findId);
+
+        product.updateProduct(request.getCnt());
+
+        ProductUpdateResponse pr = ProductUpdateResponse.builder()
+                .name(product.getName())
+                .stock(product.getStock())
+                .build();
+
+        return pr;
+
+    }
+
+    public ProductDeleteResponse deleteProducts(List<String> deleteNames) {
+
+        // 응답 객체와 남은 물품 리스트 초기화
+        ProductDeleteResponse response = new ProductDeleteResponse();
+        List<ProductDeleteResponse.Item> remainingItems = new ArrayList<>();
+
+        // repository.entrySet()에 대한 안전한 순회 및 제거를 위해 Iterator 사용
+        Iterator<Map.Entry<Long, Product>> it = repository.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry<Long, Product> entry = it.next();
+            Product product = entry.getValue();
+
+            // 삭제할 이름 목록에 포함되면 저장소에서 제거 (it.remove())
+            if (deleteNames.contains(product.getName())) {
+                it.remove();
+            } else {
+                // 남은 물품 정보를 응답 리스트에 추가
+                ProductDeleteResponse.Item item = new ProductDeleteResponse.Item();
+                item.setName(product.getName());
+                item.setStock(product.getStock());
+                remainingItems.add(item);
+            }
+        }
+
+        // 응답 구성 및 반환
+        response.setItems(remainingItems);
+        return response;
+    }
+
+
+    public static OrderCreateResponse orderCreate(OrderCreateRequest request) {
+        OrderCreateResponse or ;
+        return or;
+    }
 
 
 }

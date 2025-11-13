@@ -25,7 +25,7 @@ POST /order
 ```json
 //Input
 {
-    "cart" : [ 
+    "items" : [ 
     {
         "name" : "apple", 
         "cnt" : 20 //물건 구매 갯수
@@ -110,7 +110,7 @@ DELETE /products
 ```
 
 ```Json
-//Out
+//Out 남은 물품 이름과 재고 생성
 {
     "items" : [{
         "name": "milk",

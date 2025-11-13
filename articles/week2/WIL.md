@@ -157,3 +157,9 @@ Domain-Driven Design, DDD
 # 객체지향
 
 # JavaDoc
+
+# 알게된 점
+
+## 자바 문법
+
+### Stream와 람다함수

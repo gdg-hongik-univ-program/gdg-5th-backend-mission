@@ -9,22 +9,38 @@ import gdg.hongik.mission.dto.request.ProductUpdateRequest;
 import gdg.hongik.mission.dto.response.ProductDeleteResponse;
 import gdg.hongik.mission.dto.response.ProductGetResponse;
 import gdg.hongik.mission.dto.response.ProductUpdateResponse;
+import gdg.hongik.mission.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.*;
 
+import static ch.qos.logback.core.joran.spi.ConsoleTarget.findByName;
+
+
+/**
+ * Product 컨트롤러
+ */
 @RestController
-@RequestMapping("products")
+@RequestMapping("product")
 @Tag(name ="Product-Controller" ,description = "Product API")
 public class ProductController {
+
+    @Autowired
+    private final ProductService productService;
+
+    public ProductController(ProductService productService) {
+        this.productService = productService;
+    }
 
 
     @GetMapping("/{name}")
@@ -44,16 +60,19 @@ public class ProductController {
     public ResponseEntity<?> getProduct(@PathVariable String name){
         //컨트롤러 계층
         //사용자요청을 처리
-        for (HashMap.Entry<Long, Product> entry : repository.entrySet()) {
-            Product product = entry.getValue();
-            if (name.equals(product.getName())) {
+        boolean ex = productService.findByName(name);
+        if(ex == false ){
+            String errorMessage = "요청하신 상품을 찾을 수 없습니다. name: " + name;
 
-
-
-                return ResponseEntity.ok(result);
-            }
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(errorMessage); // String을 본문에 담아 반환
         }
-        throw new RuntimeException("존재하지 않는 상품명입니다: " + name);
+
+        ProductGetResponse item = productService.getProduct(name);
+
+        return ResponseEntity.ok(item);
+
     }
 
 
@@ -83,25 +102,27 @@ public class ProductController {
                     )
                     }))
     })
-    public ResponseEntity<Void> createProduct(@RequestBody ProductCreateRequest request){
 
-        for(Product product : repository.values()){
-            if(request.getName().equals(product.getName())){
-                throw new RuntimeException("이미 존재하는 상품명입니다: " + request.getName());
+    public ResponseEntity<?> createProduct(@RequestBody ProductCreateRequest request){
 
-            }
+
+
+        boolean ex= productService.findByName(request.getName());
+        if( ex == true ) {
+
+
+            String errorMessage = "이미 존재하는 상품명 입니다. name: " + request.getName();
+
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(errorMessage); // String을 본문에 담아 반환
+
 
         }
-
-        Product product = Product.builder()
-                .name(request.getName())
-                .price(request.getPrice())
-                .stock(request.getStock())
-                .build(); //builder 패턴
-
-        repository.put(idSequence++,product);
-
-        return ResponseEntity.created(URI.create("products")).build();
+        //물품 만들기
+        productService.postProduct(request);
+        
+        return ResponseEntity.created(URI.create("product")).build();
     }
 
     @PatchMapping("/{id}")
@@ -119,15 +140,12 @@ public class ProductController {
     public ResponseEntity<ProductUpdateResponse> updateProduct(
             @PathVariable Long id, @RequestBody ProductUpdateRequest request){
 
-        Product product = repository.get(id);
+        //서비스 계층에서 확인용 구문
+        Long findId = productService.findById(id);
 
-        System.out.println(product.toString());
-        product.setStock(product.getStock() + request.getCnt());
-
-        ProductUpdateResponse result = ProductUpdateResponse.builder()
-                .stock(product.getStock())
-                .name(product.getName())
-                .build();
+        
+        //존재하면 업데이트
+        ProductUpdateResponse result = productService.updateProduct(findId,request);
 
         return ResponseEntity.ok(result);
     }
@@ -158,34 +176,15 @@ public class ProductController {
             @RequestBody ProductDeleteRequest request){
 
 
-        // 요청으로부터 삭제할 상품 이름 목록
-        List<String> deleteNames = request.getName();
-
-        // 응답 객체 생성
-        ProductDeleteResponse response = new ProductDeleteResponse();
-        List<ProductDeleteResponse.Item> remainingItems = new ArrayList<>();
-
-        // repository는 HashMap<Long, Product> 타입
-        Iterator<HashMap.Entry<Long, Product>> it = repository.entrySet().iterator();
-        while (it.hasNext()) {
-            HashMap.Entry<Long, Product> entry = it.next();
-            Product product = entry.getValue();
-
-            // 삭제할 이름과 일치하면 repository에서 제거
-            if (deleteNames.contains(product.getName())) {
-                it.remove();
-                continue;
-            }
-
-            // 남은 물품 정보를 응답 리스트에 추가
-            ProductDeleteResponse.Item item = new ProductDeleteResponse.Item();
-            item.setName(product.getName());
-            item.setStock(product.getStock());
-            remainingItems.add(item);
+        List<String> deleteNames = new ArrayList<>();
+        for(String findName : request.getName()){
+            deleteNames.add(findName);
         }
 
-        // 응답 구성
-        response.setItems(remainingItems);
+
+        // 2. 서비스 로직 호출 및 응답 객체 받기
+        // 서비스는 삭제 후 남은 목록을 포함한 ProductDeleteResponse 객체를 반환함
+        ProductDeleteResponse response = productService.deleteProducts(deleteNames);
 
         return ResponseEntity.ok(response);
     }

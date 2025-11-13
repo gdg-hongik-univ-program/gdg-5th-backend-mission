@@ -25,9 +25,9 @@ public class Product {
     }
 
 
-    public void updateProduct(Long stock){
-        if(stock != null) {
-            this.stock = stock;
+    public void updateProduct(Long cnt){
+        if(cnt != null) {
+            this.stock = this.stock + cnt;
         }
     }
 }

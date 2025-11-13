@@ -15,4 +15,7 @@ public class ProductUpdateResponse {
 
     private String name;
     private Long stock;
+
+
+
 }

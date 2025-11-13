@@ -13,7 +13,7 @@ public class ProductDeleteResponse {
         private List<Item> items;
 
 
-    @Getter
+        @Getter
         @Setter
         public static class Item{
             private String name;

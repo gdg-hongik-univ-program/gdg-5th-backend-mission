@@ -4,6 +4,7 @@ package gdg.hongik.mission.controller;
 
 import gdg.hongik.mission.dto.request.OrderCreateRequest;
 import gdg.hongik.mission.dto.response.OrderCreateResponse;
+import gdg.hongik.mission.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -19,10 +20,22 @@ import java.net.URI;
 
 import static org.springframework.web.servlet.function.ServerResponse.created;
 
+/**
+ * order 클래스
+ * 
+ */
+
 @RestController
 @RequestMapping("order")
 @Tag(name="Order",description = "Order API")
 public class OrderController {
+
+
+    /**
+     * @param request 요청하기
+     * @return 반환 목록 없음
+     */
+
 
     @PostMapping
     @Operation(summary = "주문 등록", description = "주문 정보를 생성합니다")
@@ -51,10 +64,7 @@ public class OrderController {
     public ResponseEntity<OrderCreateResponse> createOrder(@RequestBody OrderCreateRequest request){
 
         //product의 재고랑 연결하기
-        OrderCreateResponse result = new OrderCreateResponse(
-                request.getName(),
-                request.getCnt()
-        );
+        OrderCreateResponse result = ProductService.orderCreate(request);
 
         return ResponseEntity.ok(result);
 

@@ -47,12 +47,12 @@ POST /order
         {
             "name" : "apple",
             "cnt" : 20,
-            "price" : 1000
+            "price" : 20000
         },
         {
             "name" : "water",
             "cnt" : 20,
-            "price" : 1000
+            "price" : 20000
 
         }]
 }

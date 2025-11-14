@@ -23,7 +23,7 @@ import java.util.*;
 public class ProductService {
 
 
-    HashMap<Long, Product> repository = new HashMap<>();
+    static HashMap<Long, Product> repository = new HashMap<>();
     private Long idSequence = 1L;
 
 
@@ -143,8 +143,34 @@ public class ProductService {
 
 
     public static OrderCreateResponse orderCreate(OrderCreateRequest request) {
-        OrderCreateResponse or ;
-        return or;
+
+        List<OrderCreateResponse.Item> or = new ArrayList<>();
+        Long totalPrice = 0L;
+        for(OrderCreateRequest.Item item : request.getItems()){
+            String itemName = item.getName();
+            Map.Entry<Long,Product> find = repository.entrySet().stream()
+                    .filter(p -> itemName.equals(p.getValue().getName()))
+                    .findFirst()
+                    .orElse(null);
+            //구매할 상품 갯수
+            Long n = item.getCnt();
+
+
+            OrderCreateResponse.Item pg = OrderCreateResponse.Item.builder()
+                    .price(find.getValue().getPrice() * n)
+                    .name(find.getValue().getName())
+                    .cnt(n)
+                    .build();
+            or.add(pg);
+            totalPrice += find.getValue().getPrice() * n;
+        }
+
+        OrderCreateResponse result = new OrderCreateResponse() ;
+        result.setTotalPrice(totalPrice);
+        result.setItem(or);
+
+
+        return result;
     }
 
 

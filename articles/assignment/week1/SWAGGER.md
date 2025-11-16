@@ -1,0 +1,1 @@
+![SwaggerResponse](/articles/assignment/week1/SwaggerResponse.png)

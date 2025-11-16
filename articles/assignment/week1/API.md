@@ -25,7 +25,7 @@ POST /order
 ```json
 //Input
 {
-    "cart" : [ 
+    "items" : [ 
     {
         "name" : "apple", 
         "cnt" : 20 //물건 구매 갯수
@@ -47,12 +47,12 @@ POST /order
         {
             "name" : "apple",
             "cnt" : 20,
-            "price" : 1000
+            "price" : 20000
         },
         {
             "name" : "water",
             "cnt" : 20,
-            "price" : 1000
+            "price" : 20000
 
         }]
 }
@@ -81,7 +81,7 @@ POST /products
 }
 ```
 
-### 재고추가
+### 재고수정
 PATCH /products/1
 ```Json
 //Input
@@ -105,17 +105,14 @@ DELETE /products
 ```Json
 //Input
 {
-    "items" : [
-    {"name" : "apple"},
-    {"name" : "water"}
-    ]
+    "name" : ["apple","water"]
 }
 ```
 
 ```Json
-//Out
+//Out 남은 물품 이름과 재고 생성
 {
-    "rest" : [{
+    "items" : [{
         "name": "milk",
         "stock" : 20
     },

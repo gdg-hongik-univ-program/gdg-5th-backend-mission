@@ -78,7 +78,6 @@ ERROR OUTPUT
 
 ### 재고 추가
 PATCH /admin/products/{name}/stock
-//이게 맞나
 
 INPUT
 ```JSON

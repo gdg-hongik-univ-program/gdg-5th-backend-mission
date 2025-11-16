@@ -76,8 +76,10 @@ Persistence Layer는 DB와의 상호작용을 담당
 트랜잭션은 AOP를 통해셔 구현되는데 컨트롤러에는 인터페이스 안씀
 
 
-> AOP
->
+> AOP(Aspect-Oriented Programming)  
+> 횡단 관심사 : 공통으로 필요하짐나 모듈 자체의 핵심 기능과  
+> 직접적인 관련이 없는 관심사  
+> 로깅, 트랜잭션
 
 ### 4. 코드 재사용성 촉진
 서비스 계층은 로직을 캡슐화 하므로 애플리케이션의 여러 부분에서 코드 재사용성을 촉진한다.
@@ -165,17 +167,79 @@ Domain-Driven Design, DDD
 2. 동적 바인딩
 3. 메시지
 
+## SOLID
+
 ## 객체지향 문법
+
 
 ### Interface
 정의 부분과 구현부분의 분리
 ### recode, enum
 recode 
+
+```java
+public record User(Long id, 
+        String Name,
+        String email, 
+        int age) { }
+```
+
+
+enum
+
+```java
+enum Week{
+    MONDAY,
+    SUNDAY
+}
+
+Week today = null;
+today = Week.SUNDAY;
+
+```
+
+
 ## 1주차 명세 나누기
+
+assignment -> week2 파일에 있음
+
 # JavaDoc
+
+
 
 # 알게된 점
 
 ## 자바 문법
+Stream와 람다함수
 
-### Stream와 람다함수
+## 헷갈리는점
+
+### 재고를 업데이트 할 때  
+id로 검색
+
+1. 컨트롤러에서
+    1. 물품 존재 확인 요청 
+
+2. 서비스에서
+    1. 반환하거나 
+    2. 물품 존재하지 않으면 예외처리(끝)
+
+3. 컨트롤러에서
+    1. 존재하면 업데이트 요청 (끝)
+
+
+
+### 재고를 만들때
+Name 으로 검색
+
+1. 컨트롤러에서
+    1. 물품 존재하는지 확인 요청
+
+2. 서비스에서 
+    1. 존재하면 true
+    2. 없으면 fasle
+3. 컨트롤러에서
+    1. true -> 이미 존재하는 상품명 에러 처리(끝)
+    2. false -> 재고 생성 요청
+
+예외처리를 컨트롤러에서 해야되는가 서비스에서 해야되는가?

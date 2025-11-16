@@ -22,12 +22,20 @@ import java.util.*;
 @Service
 public class ProductService {
 
-
+    /**
+     * DB 연결을 안했으르모 임시 메모리 사용
+     */
     static HashMap<Long, Product> repository = new HashMap<>();
     private Long idSequence = 1L;
 
 
-
+    /**
+     * 재고 검색 비즈니스 로직
+     * 람다 함수로 값 찾음 
+     * 널 or 실제값 반환
+     * @param productName
+     * @return
+     */
     @Transactional
     public ProductGetResponse getProduct (String productName){
 
@@ -49,7 +57,13 @@ public class ProductService {
     }
 
 
-
+    /**
+     * 이름으로 찾기 서비스 계층
+     * 이름과 매칭되는 값 존재 = true
+     * 이름과 매칭되는 값 없음 = false
+     * @param name
+     * @return
+     */
     @Transactional
     public boolean findByName(String name){
         
@@ -70,6 +84,11 @@ public class ProductService {
         return true;
     }
 
+    /**
+     * 재고 생성 비즈니스
+     *
+     * @param request
+     */
     public void postProduct(ProductCreateRequest request) {
 
         Product product = Product.builder()
@@ -81,6 +100,13 @@ public class ProductService {
         repository.put(idSequence++,product);
     }
 
+    /**
+     * id로 재고 검색
+     * name으로 재고 검색과 다른점은 
+     * 재고가 없으면 여기서 예외처리 함
+     * @param id
+     * @return
+     */
     public Long findById (Long id) {
 
         Map.Entry<Long, Product> ex = repository.entrySet().stream()
@@ -95,6 +121,12 @@ public class ProductService {
 
     }
 
+    /**
+     * 물건 업데이트 서비스 로직
+     * @param findId
+     * @param request
+     * @return
+     */
     public ProductUpdateResponse updateProduct(
             Long findId,
             ProductUpdateRequest request) {
@@ -112,6 +144,11 @@ public class ProductService {
 
     }
 
+    /**
+     * 물품 삭제 서비스 로직
+     * @param deleteNames
+     * @return
+     */
     public ProductDeleteResponse deleteProducts(List<String> deleteNames) {
 
         // 응답 객체와 남은 물품 리스트 초기화
@@ -141,7 +178,12 @@ public class ProductService {
         return response;
     }
 
-
+    /**
+     * Order 컨트롤러에서 연결
+     * 물품 차감 , 이외의 에러처리 구현 x
+     * @param request
+     * @return
+     */
     public static OrderCreateResponse orderCreate(OrderCreateRequest request) {
 
         List<OrderCreateResponse.Item> or = new ArrayList<>();

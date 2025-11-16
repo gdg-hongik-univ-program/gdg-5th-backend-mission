@@ -42,6 +42,13 @@ public class ProductController {
         this.productService = productService;
     }
 
+    /**
+     * 재고 검색 컨트롤러
+     * @param name 파라미터
+     * 1. 상품을 찾을 수 없을때 NOT_FOUND
+     * 2. 상품 찾으면 리턴
+     * @return 리턴값 재고
+     */
 
     @GetMapping("/{name}")
     @Operation(summary = "재고 검색", description = "재고 정보를 검색합니다. 사용자 관리자 모두 사용 가능")
@@ -76,7 +83,13 @@ public class ProductController {
     }
 
 
-
+    /**
+     * 재고 등록 매소드
+     * 1. 중복 확인
+     * 2. 재고 등록
+     * @param request 바디 값 요청
+     * @return
+     */
     @PostMapping
     @Operation(summary = "재고 등록", description = "재고를 등록합니다. 관리자만 사용 가능")
     @ApiResponses(value = {
@@ -106,7 +119,7 @@ public class ProductController {
     public ResponseEntity<?> createProduct(@RequestBody ProductCreateRequest request){
 
 
-
+        // 중복인지 확인
         boolean ex= productService.findByName(request.getName());
         if( ex == true ) {
 
@@ -125,6 +138,14 @@ public class ProductController {
         return ResponseEntity.created(URI.create("product")).build();
     }
 
+    /**
+     * 재고 수정
+     * 1. 재고 확인
+     * 2. 존재하면 업데이트
+     * @param id 파라미터
+     * @param request
+     * @return
+     */
     @PatchMapping("/{id}")
     @Operation(summary = "재고 수정" , description = "재고를 수정합니다, 관리자만 가능")
     @ApiResponse(responseCode = "200" , content = @Content(mediaType ="application/json",
@@ -150,7 +171,11 @@ public class ProductController {
         return ResponseEntity.ok(result);
     }
 
-
+    /**
+     * 물품 삭제 메소드
+     * @param request
+     * @return
+     */
     @DeleteMapping
     @Operation(summary = "물품 삭제", description = "관리자만 사용 가능")
     @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json",

@@ -10,9 +10,8 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class RemainProductsResponse { // 💡 [수정 1] 클래스 선언은 'class' 키워드와 '{'로 시작해야 합니다.
+public class RemainProductsResponse {
 
-    // 💡 [수정 2] 필드 선언은 클래스 내부에서 세미콜론(;)으로 끝나야 합니다.
     private List<ProductResponse> remainingProducts;
     private int count;
 

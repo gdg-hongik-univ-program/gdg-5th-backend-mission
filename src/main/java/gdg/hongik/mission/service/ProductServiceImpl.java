@@ -2,6 +2,7 @@ package gdg.hongik.mission.service;
 
 import gdg.hongik.mission.dto.response.ProductResponse;
 import gdg.hongik.mission.dto.request.ProductCreateRequest;
+import gdg.hongik.mission.dto.response.RemainProductsResponse;
 import gdg.hongik.mission.entity.Product;
 import gdg.hongik.mission.repository.ProductRepository;
 import org.springframework.stereotype.Service;
@@ -39,9 +40,10 @@ public class ProductServiceImpl implements ProductService {
      * @throws RuntimeException 상품을 찾을 수 없는 경우
      */
     @Override
+    @Transactional
     public ProductResponse searchProduct(String name) {
 
-        Product searchProduct = productRepository.findbyName(name)
+        Product searchProduct = productRepository.findByName(name)
                 .orElseThrow(() -> new RuntimeException("Product not found: " + name));
 
         return ProductResponse.of(searchProduct);
@@ -60,7 +62,7 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     public ProductResponse createProduct(ProductCreateRequest request) {
 
-        if (productRepository.findbyName(request.getName()).isPresent()) {
+        if (productRepository.findByName(request.getName()).isPresent()) {
             throw new RuntimeException("product already exists: " + request.getName());
         }
 
@@ -74,17 +76,17 @@ public class ProductServiceImpl implements ProductService {
     /**
      * 특정 상품의 재고 수량을 추가
      *
-     * @param name 재고를 추가할 상품 이름
+     * @param productId 재고를 추가할 상품 이름
      * @param quantity 수정할 수량
      * @return 수정된 상품 정보를 담은 응답 DTO
      * @throws RuntimeException 상품을 찾을 수 없거나 재고가 부족할 경우
      */
     @Override
     @Transactional
-    public ProductResponse updateProduct(String name, int quantity) {
+    public ProductResponse updateProduct(Long productId, int quantity) { // 💡 name -> productId로 변경
 
-        Product updateProduct = productRepository.findbyName(name)
-                .orElseThrow(() -> new RuntimeException("Product not found: " + name));
+        Product updateProduct = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found with ID: " + productId)); // 💡 예외 메시지도 ID 기준으로 수정
 
         updateProduct.increaseStock(quantity);
 
@@ -94,28 +96,35 @@ public class ProductServiceImpl implements ProductService {
     /**
      * 지정된 상품들을 삭제
      *
-     * @param names 삭제할 상품 이름 리스트
+     * @param ids 삭제할 상품 아이디 리스트
+     * @return
      */
     @Override
     @Transactional
-    public void deleteProduct(List<String> names) {
-        productRepository.deletebyName(names);
+    public RemainProductsResponse deleteProducts(List<Long> ids) {
+        // 1. 주어진 ID 목록의 물품을 삭제합니다.
+        productRepository.deleteAllById(ids);
+
+        // 2. 삭제 후, 쇼핑몰에 남아있는 모든 물품을 조회합니다.
+        List<Product> remainingProducts = productRepository.findAll();
+
+        // 3. 결과를 RemainProductsResponse DTO로 변환하여 반환합니다.
+        return RemainProductsResponse.from(remainingProducts);
     }
 
     /**
      * 상품의 재고를 감소
      * 재고가 부족하면 예외 발생
      *
-     * @param name 재고를 감소시킬 상품 이름
+     * @param id 재고를 감소시킬 상품 이름
      * @param quantity 감소시킬 수량
      * @throws RuntimeException 상품을 찾을 수 없거나 재고가 부족할 경우
      */
-    @Override
     @Transactional
-    public void decreaseStock(String name, int quantity) {
+    public void decreaseStock(Long id, int quantity) {
 
-        Product product = productRepository.findbyName(name)
-                .orElseThrow(() -> new RuntimeException("Product not found: " + name));
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product not found: " + id));
 
         product.decreaseStock(quantity);
 

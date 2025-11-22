@@ -1,14 +1,12 @@
 package gdg.hongik.mission.entity;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Table(name = "USER S")
 @Getter
 @NoArgsConstructor
 
@@ -18,6 +16,7 @@ public class  User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+
 
     public User(Long id, String name) {
         this.id = id;

@@ -18,10 +18,9 @@ public class CartItem {
     @Column(name = "cart_item_id")
     private Long id;
 
-    // 💡 [수정] 상품 이름/가격 대신 Product 엔티티 객체 참조 (N:1 관계)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
-    private Product product; // 👈 이 객체를 통해 이름과 가격을 얻습니다.
+    private Product product;
 
     /** 수량  */
     private int quantity;
@@ -33,7 +32,6 @@ public class CartItem {
     @JoinColumn(name = "cart_id")
     private Cart cart;
 
-    // 💡 [추가] CartItem 생성자 (Product 객체를 받음)
     public CartItem(Cart cart, Product product, int quantity) {
         this.cart = cart;
         this.product = product;

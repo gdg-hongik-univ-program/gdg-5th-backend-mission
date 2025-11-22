@@ -27,17 +27,14 @@ public class CartListResponse {
      */
     public static CartListResponse from(List<CartItem> cartItems) {
 
-        // 1. 개별 CartItem 엔티티를 CartItemResponse DTO로 변환
         List<CartItemResponse> itemResponses = cartItems.stream()
                 .map(CartItemResponse::of)
                 .collect(Collectors.toList());
 
-        // 2. 전체 총액 계산
         int totalPrice = itemResponses.stream()
-                .mapToInt(CartItemResponse::getItemTotalPrice)
+                .mapToInt(CartItemResponse::getTotalPrice)
                 .sum();
 
-        // 3. 최종 DTO 생성
         return new CartListResponse(itemResponses, totalPrice);
     }
 }

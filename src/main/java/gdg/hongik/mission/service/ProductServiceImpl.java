@@ -102,13 +102,11 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public RemainProductsResponse deleteProducts(List<Long> ids) {
-        // 1. 주어진 ID 목록의 물품을 삭제합니다.
+
         productRepository.deleteAllById(ids);
 
-        // 2. 삭제 후, 쇼핑몰에 남아있는 모든 물품을 조회합니다.
         List<Product> remainingProducts = productRepository.findAll();
 
-        // 3. 결과를 RemainProductsResponse DTO로 변환하여 반환합니다.
         return RemainProductsResponse.from(remainingProducts);
     }
 

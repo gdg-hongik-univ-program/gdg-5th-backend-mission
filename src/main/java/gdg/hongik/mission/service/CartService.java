@@ -43,31 +43,28 @@ public class CartService {
         cart.getItems().add(newItem);
         newItem.setCart(cart);
 
-        cartRepository.saveCart(cart); // 💡 [추가] Cart를 저장하여 CartItem도 함께 저장합니다.
+        cartRepository.saveCart(cart);
 
-        return newItem.getId(); // 이제 ID가 할당됩니다.
+        return newItem.getId();
     }
 
     /**
-     * 장바구니가 없는 사용자를 위해 새로운 장바구니를 생성합니다.
+     * 장바구니가 없는 사용자를 위해 새로운 장바구니를 생성
      */
     private Cart createNewCart(Long userId) {
-        Cart newCart = new Cart(userId); // Cart 엔티티에 Long userId를 받는 생성자가 필요합니다.
+        Cart newCart = new Cart(userId); 
         return cartRepository.saveCart(newCart);
     }
 
 //    @Override
     @Transactional(readOnly = true)
     public CartListResponse getCartList(Long userId) {
-
-        // 1. Cart 엔티티 조회 (CartItem 항목까지 즉시 로딩되도록 Fetch Join 가정)
+        
         Cart cart = cartRepository.findByUserId(userId)
-                .orElseThrow(() -> new RuntimeException("Cart not found for user: " + userId));
-
-        // 2. CartItems 리스트 추출
+                .orElseThrow(() -> new RuntimeException("유저에게 장바구니가 존재하지 않습니다: " + userId));
+        
         List<CartItem> cartItems = cart.getItems();
-
-        // 3. List<CartItem>을 CartListResponse DTO로 변환
+        
         return CartListResponse.from(cartItems);
     }
 }

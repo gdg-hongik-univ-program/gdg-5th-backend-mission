@@ -14,33 +14,30 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class CartItemResponse {
 
-    // 장바구니 항목 ID (삭제/수정 시 특정 항목 지정을 위해 필요)
     private Long cartItemId;
 
-    // 상품 정보
     private Long productId;
     private String productName;
-    private int unitPrice;       // 단가
+    private int subPrice;
 
-    // 장바구니 정보
-    private int quantity;        // 담은 수량
-    private int itemTotalPrice;  // 항목별 총 가격 (단가 * 수량)
+    private int quantity;
+    private int TotalPrice;  // 총 가격
 
     /**
      * CartItem 엔티티를 받아 DTO로 변환하는 정적 팩토리 메서드
      */
     public static CartItemResponse of(CartItem item) {
-        Product product = item.getProduct(); // CartItem이 Product를 참조한다고 가정
-        int unitPrice = product.getPrice();
+        Product product = item.getProduct();
+        int subPrice = product.getPrice();
         int quantity = item.getQuantity();
 
         return new CartItemResponse(
                 item.getId(),
                 product.getId(),
                 product.getName(),
-                unitPrice,
+                subPrice,
                 quantity,
-                unitPrice * quantity // 총액 계산
+                subPrice * quantity // 총액 계산
         );
     }
 }

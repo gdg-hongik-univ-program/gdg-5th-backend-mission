@@ -30,9 +30,7 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public OrderCreateResponse createOrderFromCart(Long userId) {
 
-
         // 1. 유저 아이디로 장바구니 조회
-        // 💡 주의: CartRepository의 findByUserId 메서드에서 CartItem을 JOIN FETCH 해야 LAZY 오류 방지
         Cart cart = cartRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("Cart not found for user: " + userId));
 
@@ -46,7 +44,6 @@ public class OrderServiceImpl implements OrderService {
         List<OrderProduct> orderProducts = cartItems.stream()
                 .map(cartItem -> {
 
-                    // 💡 [수정] CartItem이 참조하는 Product 객체에 접근
                     Product product = cartItem.getProduct();
 
                     // 재고 감소 처리 (ID로 처리하도록 productService 수정 필요)

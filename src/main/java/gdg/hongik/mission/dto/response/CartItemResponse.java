@@ -1,7 +1,7 @@
 package gdg.hongik.mission.dto.response;
 
 import gdg.hongik.mission.entity.CartItem;
-import gdg.hongik.mission.entity.Product; // Product 엔티티 접근을 위해 필요
+import gdg.hongik.mission.entity.Product;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;

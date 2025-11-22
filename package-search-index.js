@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"gdg.hongik.mission"},{"l":"gdg.hongik.mission.controller"},{"l":"gdg.hongik.mission.dto.request"},{"l":"gdg.hongik.mission.dto.response"},{"l":"gdg.hongik.mission.entity"},{"l":"gdg.hongik.mission.repository"},{"l":"gdg.hongik.mission.service"}];updateSearchResults();

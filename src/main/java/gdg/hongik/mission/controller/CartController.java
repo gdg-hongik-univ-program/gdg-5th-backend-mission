@@ -2,9 +2,7 @@ package gdg.hongik.mission.controller;
 
 import gdg.hongik.mission.dto.request.CartAddRequest;
 import gdg.hongik.mission.dto.response.CartListResponse;
-import gdg.hongik.mission.repository.CartRepository;
 import gdg.hongik.mission.service.CartService;
-import gdg.hongik.mission.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

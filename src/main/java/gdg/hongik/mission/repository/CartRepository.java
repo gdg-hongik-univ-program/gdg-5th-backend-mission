@@ -1,7 +1,6 @@
 package gdg.hongik.mission.repository;
 
 import gdg.hongik.mission.entity.Cart;
-import gdg.hongik.mission.entity.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.NoArgsConstructor;

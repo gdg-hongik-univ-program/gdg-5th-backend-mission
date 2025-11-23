@@ -122,7 +122,7 @@ JPA는 엔티티를 직접 DB에 넣지 않는다. 일단 “영속성 컨텍스
 Product p = new Product();
 ```
 
-1. 영속 (managed) : JPA가 관리하는 상태, 1차 캐시 안에 저장된 상태이다.
+2. 영속 (managed) : JPA가 관리하는 상태, 1차 캐시 안에 저장된 상태이다.
 
 ```java
 em.persist(p);
@@ -130,7 +130,7 @@ em.persist(p);
 
 영속 상태가 되면 동일성 보장, Dirty Checking 등등이 적용되며 flush/commit 시 DB에 반영된다.
 
-1. 준영속 (detached) : 영속성 컨텍스트에서 분리된 상태
+3. 준영속 (detached) : 영속성 컨텍스트에서 분리된 상태
 
 ```java
 em.detach(p);
@@ -138,7 +138,7 @@ em.detach(p);
 
 그냥 일반 자바 객체처럼 된다.
 
-1. 삭제 (removed)
+4. 삭제 (removed)
 
 ```java
 em.remove(p);
@@ -179,8 +179,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 }
 ```
 
-1. 예외 변환 (Exception Translation) : @Repository가 붙으면 JPA/Hibernate가 던지는 예외를 Spring의 DataAccessException으로 변환해준다.
-2. Spring Bean 등록 : 스프링 컨테이너에 의해 자동 빈 등록, 주입 가능
+2. 예외 변환 (Exception Translation) : @Repository가 붙으면 JPA/Hibernate가 던지는 예외를 Spring의 DataAccessException으로 변환해준다.
+3. Spring Bean 등록 : 스프링 컨테이너에 의해 자동 빈 등록, 주입 가능
 
 ### @Transactional
 
@@ -197,8 +197,8 @@ public void saveProduct(Product p) {
 
 DB 작업은 반드시 트랜잭션 안에서 이루어지므로 Spring이 이 애너테이션을 보고 트랜잭션 시작-커밋을 자동 수행한다.
 
-1. 트랜잭션이 시작되면 영속성 컨텍스트가 생성되고, persist(), find() 등이 이 컨텍스트 안에서 실행되며 트랜잭션 커밋 시 flush() 되어 DB에 반영까지 된다.
-2. 읽기 전용 트랜잭션 또한 가능하다. 조회만 하는 경우
+2. 트랜잭션이 시작되면 영속성 컨텍스트가 생성되고, persist(), find() 등이 이 컨텍스트 안에서 실행되며 트랜잭션 커밋 시 flush() 되어 DB에 반영까지 된다.
+3. 읽기 전용 트랜잭션 또한 가능하다. 조회만 하는 경우
 
 ```java
 @Transactional(readOnly = true)

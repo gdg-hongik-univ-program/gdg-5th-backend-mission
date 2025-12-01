@@ -12,8 +12,8 @@ import lombok.Getter;
 @Getter
 public class OrderProductResponse {
 
-    private Long id;
-    private String name;
+    private Long orderproductId;
+    private String orderProductName;
     private int quantity;
     /** 상품별 금액 (단가 * 수량) */
     private int subPrice;
@@ -27,8 +27,8 @@ public class OrderProductResponse {
      * @param subPrice 상품별 소계 금액
      */
     public OrderProductResponse(Long id, String name, int quantity, int subPrice) {
-        this.id = id;
-        this.name = name;
+        this.orderproductId = id;
+        this.orderProductName = name;
         this.quantity = quantity;
         this.subPrice = subPrice;
     }
@@ -40,8 +40,8 @@ public class OrderProductResponse {
      * @return 변환된 주문 상품 응답 DTO
      */
     public static OrderProductResponse of(OrderProduct op) {
-        Long id = op.getId();
-        String name = op.getName();
+        Long id = op.getOrderProductId();
+        String name = op.getOrderProductName();
         int quantity = op.getQuantity();
         int subPrice = op.calculateSubprice(); // 여기서 subPrice 계산
 

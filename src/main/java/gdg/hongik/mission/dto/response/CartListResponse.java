@@ -22,19 +22,4 @@ public class CartListResponse {
     /** 장바구니 전체 총 금액 */
     private int totalPrice;
 
-    /**
-     * List<CartItem> 엔티티를 받아 CartListResponse로 변환하는 정적 팩토리 메서드
-     */
-    public static CartListResponse from(List<CartItem> cartItems) {
-
-        List<CartItemResponse> itemResponses = cartItems.stream()
-                .map(CartItemResponse::of)
-                .collect(Collectors.toList());
-
-        int totalPrice = itemResponses.stream()
-                .mapToInt(CartItemResponse::getTotalPrice)
-                .sum();
-
-        return new CartListResponse(itemResponses, totalPrice);
-    }
 }

@@ -77,12 +77,12 @@ ERROR OUTPUT
 ```
 
 ### 재고 추가
-PATCH /admin/products/{name}/stock
+PATCH /admin/products/{id}/stock
 
 INPUT
 ```JSON
 {
-    "name" : "apple",
+    "id": 1,
     "quantity" : 300
 }
 ```
@@ -90,6 +90,7 @@ INPUT
 OUTPUT
 ```JSON
 {
+    "id": 1,
     "name" : "apple",
     "price": 3000,
     "stock" : 300
@@ -97,12 +98,12 @@ OUTPUT
 ```
 
 ### 물품 삭제
-DELETE /admin/products?name=string[]
+DELETE /admin/products
 
 INPUT
 ```JSON
 {
-   "name" : "apple"
+    "id": 1
 }
 ```
 
@@ -110,9 +111,9 @@ INPUT
 ```JSON
 [
     {
-        "name": "orange",
-        "price": 2000,
-        "stock": 50
+      "name": "orange",
+      "price": 2000,
+      "stock": 50
     },
     {
       "name": "grape",

@@ -21,10 +21,10 @@ public class OrderProduct {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long orderProductId;
 
     /** 주문 상품 이름 */
-    private String name;
+    private String orderProductName;
     /** 주문 수량 */
     private int quantity;
     /** 주문 시점의 상품 단가 */
@@ -47,7 +47,7 @@ public class OrderProduct {
      * @param price 주문 시점의 상품 가격
      */
     private OrderProduct(String name, int quantity, int price) {
-        this.name = name;
+        this.orderProductName = name;
         this.quantity = quantity;
         this.price = price;
     }
@@ -60,7 +60,7 @@ public class OrderProduct {
      * @return 생성된 {@code OrderProduct} 객체
      */
     public static OrderProduct create(OrderProductRequest request) { // OrderProduct 객체 생성
-        return new OrderProduct(request.getName(), request.getQuantity(), request.getPrice());
+        return new OrderProduct(request.getProductName(), request.getQuantity(), request.getPrice());
     }
 
     /**

@@ -1,5 +1,9 @@
 package gdg.hongik.mission.service;
 
+import gdg.hongik.mission.common.exception.BadRequestException;
+import gdg.hongik.mission.common.exception.NotFoundException;
+import gdg.hongik.mission.common.message.ErrorMessage;
+import gdg.hongik.mission.dto.request.OrderProductRequest;
 import gdg.hongik.mission.dto.response.CartListResponse;
 import gdg.hongik.mission.dto.response.OrderCreateResponse;
 import gdg.hongik.mission.entity.*;
@@ -32,31 +36,34 @@ public class OrderServiceImpl implements OrderService {
 
         // 1. 유저 아이디로 장바구니 조회
         Cart cart = cartRepository.findByUserId(userId)
-                .orElseThrow(() -> new RuntimeException("Cart not found for user: " + userId));
+            .orElseThrow(() -> new NotFoundException(ErrorMessage.USER_CART_NONE + userId));
 
         List<CartItem> cartItems = cart.getItems();
 
         if (cartItems.isEmpty()) {
-            throw new RuntimeException("Cart is empty.");
+            throw new BadRequestException(ErrorMessage.USER_CART_EMPTY);
         }
 
         // 2. 장바구니 항목 -> 주문 상품 목록으로 변환
-        List<OrderProduct> orderProducts = cartItems.stream()
-                .map(cartItem -> {
+        List<OrderProduct> orderProducts = cartItems.stream() //stream 생성 - cartItems의 각 요소를 하나씩 처리 가능
+                .map(cartItem -> { //cartItem에 수행할 로직 ->
 
                     Product product = cartItem.getProduct();
 
-                    // 재고 감소 처리 (ID로 처리하도록 productService 수정 필요)
-                    productService.decreaseStock(product.getId(), cartItem.getQuantity());
+                    if (productRepository.findById(product.getProductId()).isEmpty()) {
+                        throw new NotFoundException(
+                                ErrorMessage.PRODUCT_NOT_FOUND + product.getProductName() + " (장바구니에 있지만 현재 삭제됨)");
+                    }
 
-                    // OrderProduct 생성 (Product의 최신 이름, 가격 정보 사용)
-                    OrderProduct op = OrderProduct.create(
-                            new gdg.hongik.mission.dto.request.OrderProductRequest(
-                                    product.getName(), cartItem.getQuantity(), product.getPrice())
-                    );
+                    // 각 cartItem에 대해 재고 감소 처리
+                    productService.decreaseStock(product.getProductId(), cartItem.getQuantity());
+
+                    // OrderProduct 생성
+                    OrderProduct op = OrderProduct.create(new OrderProductRequest(product.getProductName(), cartItem.getQuantity(), product.getPrice()));
+
                     return op;
                 })
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()); //OrderProducts 리스트로 변환
 
         // 3. 주문 객체 생성 및 저장
         Order newOrder = Order.createOrder(orderProducts);

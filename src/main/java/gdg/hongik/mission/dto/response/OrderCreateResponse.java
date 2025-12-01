@@ -1,5 +1,6 @@
 package gdg.hongik.mission.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import gdg.hongik.mission.entity.Order;
 import gdg.hongik.mission.entity.OrderProduct;
 import lombok.AllArgsConstructor;
@@ -16,6 +17,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 @AllArgsConstructor
+@JsonPropertyOrder({"id", "orderedProducts", "totalPrice"})
 public class OrderCreateResponse {
     /** 생성된 주문의 ID */
     private Long Id;
@@ -43,7 +45,7 @@ public class OrderCreateResponse {
         }
 
         return new OrderCreateResponse(
-                order.getId(),         // Order ID
+                order.getOrderId(),         // Order ID
                 productResponses,      // 최종 상품 리스트
                 order.getTotalPrice()  // Order 객체에서 계산된 총 금액
         );

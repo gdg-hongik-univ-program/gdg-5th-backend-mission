@@ -23,20 +23,18 @@
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         @Column(name = "cart_id")
-        private Long id;
+        private Long cartId;
 
         private Long userId;
-
-
+        
         /**
          * 장바구니에 담긴 상품 목록
          * {@code Cart}와 {@code CartItem}은 1:N 관계
-         * {@code CascadeType.ALL}로 인해 장바구니 삭제 시 모든 {@code CartItem}도 함께 삭제됨
          */
         @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
-        private List<CartItem> items = new ArrayList<>();
+        private List<CartItem> items = new ArrayList<>(); //여러 CartItem을 리스트 형태로 보유
 
         public Cart(Long userId) {
             this.userId = userId;
-        }
+        } //생성자
     }

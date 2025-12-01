@@ -16,9 +16,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ProductResponse {
     /** 상품 ID */
-    private Long id;
+    private Long productId;
     /** 상품 이름 */
-    private String name;
+    private String productName;
     /** 상품 단가 */
     private int price;
     /** 현재 재고 수량 */
@@ -31,7 +31,7 @@ public class ProductResponse {
      * @return 상품 정보 응답 DTO
      */
     public static ProductResponse of(Product product) {
-        ProductResponse response = new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getQuantity());
+        ProductResponse response = new ProductResponse(product.getProductId(), product.getProductName(), product.getPrice(), product.getQuantity());
 
         return response;
     }

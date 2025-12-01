@@ -29,7 +29,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
      * @param name 조회할 상품 이름
      * @return 존재할 경우 {@link Product}를 포함하는 {@code Optional}, 없을 경우 빈 {@code Optional}
      */
-    Optional<Product> findByName(String name);
+    Optional<Product> findByProductName(String name);
     Optional<Product> findById(Long id);
 
+    public abstract void deleteAllByProductNameIn(List<String> productNames);
 }

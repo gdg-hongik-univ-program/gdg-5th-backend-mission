@@ -17,11 +17,11 @@ import lombok.NoArgsConstructor;
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long productId;
 
     /** 상품 이름  */
     @Column(nullable = false, unique = true)
-    private String name;
+    private String productName;
 
     /** 상품 단가 */
     @Column(nullable = false)
@@ -39,7 +39,7 @@ public class Product {
      * @param quantity 초기 재고 수량
      */
     public Product(String name, int price, int quantity) {
-        this.name = name;
+        this.productName = name;
         this.price = price;
         this.quantity = quantity;
     }

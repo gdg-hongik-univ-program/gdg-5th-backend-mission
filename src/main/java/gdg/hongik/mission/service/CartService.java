@@ -1,5 +1,7 @@
 package gdg.hongik.mission.service;
 
+import gdg.hongik.mission.common.exception.NotFoundException;
+import gdg.hongik.mission.common.message.ErrorMessage;
 import gdg.hongik.mission.dto.response.CartListResponse;
 import gdg.hongik.mission.entity.Cart;
 import gdg.hongik.mission.entity.CartItem;
@@ -32,11 +34,11 @@ public class CartService {
     @Transactional(readOnly = true)
     public Long addItemToCart(Long userId, Long productId, int quantity) {
 
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("상품을 찾을 수 없습니다. ID: " + productId));
-
         Cart cart = cartRepository.findByUserId(userId)
                 .orElseGet(() -> createNewCart(userId));
+
+        Product product = productRepository.findById(productId)
+            .orElseThrow(() -> new NotFoundException(ErrorMessage.PRODUCT_NOT_FOUND + productId));
 
         CartItem newItem = new CartItem(cart, product, quantity);
 
@@ -56,15 +58,4 @@ public class CartService {
         return cartRepository.saveCart(newCart);
     }
 
-//    @Override
-    @Transactional(readOnly = true)
-    public CartListResponse getCartList(Long userId) {
-        
-        Cart cart = cartRepository.findByUserId(userId)
-                .orElseThrow(() -> new RuntimeException("유저에게 장바구니가 존재하지 않습니다: " + userId));
-        
-        List<CartItem> cartItems = cart.getItems();
-        
-        return CartListResponse.from(cartItems);
-    }
 }

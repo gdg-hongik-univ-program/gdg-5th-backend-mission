@@ -33,8 +33,8 @@ public class CartItemResponse {
 
         return new CartItemResponse(
                 item.getId(),
-                product.getId(),
-                product.getName(),
+                product.getProductId(),
+                product.getProductName(),
                 subPrice,
                 quantity,
                 subPrice * quantity // 총액 계산

@@ -33,18 +33,18 @@ public interface ProductService {
     /**
      * 특정 상품의 재고 수량을 수정
      *
-     * @param id 재고를 수정할 상품 아이디
+     * @param name 재고를 수정할 상품 아이디
      * @param quantity 수정할 수량
      * @return 수정된 상품 정보를 담은 응답 DTO
      */
-    ProductResponse updateProduct(Long id, int quantity);
+    ProductResponse updateProduct(String name, int quantity);
 
     /**
      * 지정된 이름의 상품들을 삭제
      *
-     * @param ids 삭제할 상품 이름 리스트
+     * @param names 삭제할 상품 이름 리스트
      */
-    RemainProductsResponse deleteProducts(List<Long> ids);
+    RemainProductsResponse deleteProducts(List<String> names);
 
     /**
      * 주문 등으로 인해 특정 상품의 재고를 감소

@@ -1,5 +1,8 @@
 package gdg.hongik.mission.service;
 
+import gdg.hongik.mission.common.exception.BadRequestException;
+import gdg.hongik.mission.common.exception.NotFoundException;
+import gdg.hongik.mission.common.message.ErrorMessage;
 import gdg.hongik.mission.dto.response.ProductResponse;
 import gdg.hongik.mission.dto.request.ProductCreateRequest;
 import gdg.hongik.mission.dto.response.RemainProductsResponse;
@@ -43,8 +46,8 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     public ProductResponse searchProduct(String name) {
 
-        Product searchProduct = productRepository.findByName(name)
-                .orElseThrow(() -> new RuntimeException("Product not found: " + name));
+        Product searchProduct = productRepository.findByProductName(name)
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.PRODUCT_NOT_FOUND + name));
 
         return ProductResponse.of(searchProduct);
     }
@@ -62,11 +65,11 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     public ProductResponse createProduct(ProductCreateRequest request) {
 
-        if (productRepository.findByName(request.getName()).isPresent()) {
-            throw new RuntimeException("product already exists: " + request.getName());
+        if (productRepository.findByProductName(request.getProductName()).isPresent()) {
+            throw new BadRequestException(ErrorMessage.PRODUCT_ALREADY_EXISTS + request.getProductName());
         }
 
-        Product newProduct = new Product(request.getName(), request.getPrice(), request.getQuantity());
+        Product newProduct = new Product(request.getProductName(), request.getPrice(), request.getQuantity());
         Product savedProduct = productRepository.save(newProduct);
 
         return ProductResponse.of(savedProduct);
@@ -76,17 +79,21 @@ public class ProductServiceImpl implements ProductService {
     /**
      * 특정 상품의 재고 수량을 추가
      *
-     * @param productId 재고를 추가할 상품 이름
+     * @param productName 재고를 추가할 상품 이름
      * @param quantity 수정할 수량
      * @return 수정된 상품 정보를 담은 응답 DTO
      * @throws RuntimeException 상품을 찾을 수 없거나 재고가 부족할 경우
      */
     @Override
     @Transactional
-    public ProductResponse updateProduct(Long productId, int quantity) { // 💡 name -> productId로 변경
+    public ProductResponse updateProduct(String productName, int quantity) { // 💡 name -> productId로 변경
 
-        Product updateProduct = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Product not found with ID: " + productId)); // 💡 예외 메시지도 ID 기준으로 수정
+        if (quantity <= 0) {
+            throw new BadRequestException("재고 추가 수량은 0보다 커야 합니다.");
+        }
+        
+        Product updateProduct = productRepository.findByProductName(productName)
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.PRODUCT_NOT_FOUND + productName)); // 💡 예외 메시지도 ID 기준으로 수정
 
         updateProduct.increaseStock(quantity);
 
@@ -96,14 +103,14 @@ public class ProductServiceImpl implements ProductService {
     /**
      * 지정된 상품들을 삭제
      *
-     * @param ids 삭제할 상품 아이디 리스트
+     * @param names 삭제할 상품 아이디 리스트
      * @return
      */
     @Override
     @Transactional
-    public RemainProductsResponse deleteProducts(List<Long> ids) {
+    public RemainProductsResponse deleteProducts(List<String> names) {
 
-        productRepository.deleteAllById(ids);
+        productRepository.deleteAllByProductNameIn(names);
 
         List<Product> remainingProducts = productRepository.findAll();
 
@@ -121,8 +128,18 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     public void decreaseStock(Long id, int quantity) {
 
+        if (quantity <= 0) {
+            throw new BadRequestException("재고 감소 수량은 0보다 커야 합니다.");
+        }
+
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found: " + id));
+            .orElseThrow(() -> new NotFoundException(ErrorMessage.PRODUCT_NOT_FOUND + id));
+
+        // 재고 부족 검증 및 예외 처리
+        if (product.getQuantity() < quantity) {
+            throw new BadRequestException(
+                    ErrorMessage.PRODUCT_STOCK_NOT_ENOUGH + product.getProductName()); // 보강 필수
+        }
 
         product.decreaseStock(quantity);
 

@@ -4,6 +4,7 @@ import gdg.hongik.mission.dto.response.OrderCreateResponse;
 import gdg.hongik.mission.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,9 +19,11 @@ import java.net.URI;
  * @since 2025-11-16
  * @see OrderService
  */
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/orders")
+@CrossOrigin("*")
 public class OrderController
 {
     private final OrderService orderService;
@@ -38,7 +41,7 @@ public class OrderController
         Long MOCK_USER_ID = 1L; // 테스트용 mock 유저
         OrderCreateResponse newOrder = orderService.createOrderFromCart(MOCK_USER_ID);
         return ResponseEntity.created(URI.create("/orders/" + newOrder.getId()))
-                .body(newOrder);//201 리소스 생성 성공
+                .body(newOrder);
     }
 
 

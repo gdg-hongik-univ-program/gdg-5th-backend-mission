@@ -11,7 +11,7 @@ import lombok.Getter;
 @Getter
 public class OrderProductRequest {
     /** 주문 상품의 이름 */
-    private String name;
+    private String productName;
     /** 주문 수량 */
     private int quantity;
     /** 주문 시점의 상품 가격 */
@@ -20,12 +20,12 @@ public class OrderProductRequest {
     /**
      * 생성자
      *
-     * @param name 상품 이름
+     * @param productName 상품 이름
      * @param quantity 주문 수량
      * @param price 상품 단가
      */
-    public OrderProductRequest(String  name, int quantity, int price) {
-        this.name = name;
+    public OrderProductRequest(String  productName, int quantity, int price) {
+        this.productName = productName;
         this.quantity = quantity;
         this.price = price;
     }
